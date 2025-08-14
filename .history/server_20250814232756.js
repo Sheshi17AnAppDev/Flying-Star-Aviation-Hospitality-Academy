@@ -47,7 +47,7 @@ app.post('/send-form1', async (req, res) => {
 
   try {
             await transporter.sendMail(mailOptions);
-            res.json({ message: 'Form 1 data sent successfully!', redirect: '/thank-you-page.html' });
+            res.json({ message: 'Form 1 data sent successfully!', redirect: '/thank-you-fixed.html' });
   } catch (error) {
     console.error('Error sending email:', error.message || error);
     res.status(500).json({ message: 'Error sending email.', error: error.message || error });
@@ -81,7 +81,7 @@ app.post('/send-form2', async (req, res) => {
     res.json({ 
       success: true, 
       message: 'Form 2 data sent successfully!', 
-      redirect: '/thank-you-page.html' 
+      redirect: '/thank-you-fixed.html' 
     });
   } catch (error) {
     console.error('Error sending email:', error);
@@ -119,7 +119,7 @@ app.post('/send-cta-form', async (req, res) => {
     res.json({ 
       success: true, 
       message: 'CTA form data sent successfully!', 
-      redirect: '/thank-you-page.html' 
+      redirect: '/thank-you-fixed.html' 
     });
   } catch (error) {
     console.error('Error sending email:', error);

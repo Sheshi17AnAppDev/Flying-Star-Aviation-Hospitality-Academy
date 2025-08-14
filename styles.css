@@ -19,6 +19,17 @@
     --border-radius: 8px;
     --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     --transition: all 0.3s ease;
+    
+    /* Social Media Brand Colors - Consistent across site */
+    --instagram-primary: #E4405F;
+    --instagram-gradient-start: #f09433;
+    --instagram-gradient-end: #bc1888;
+    --facebook-primary: #1877F2;
+    --facebook-secondary: #4267B2;
+    --linkedin-primary: #0A66C2;
+    --twitter-primary: #1DA1F2;
+    --youtube-primary: #FF0000;
+    --whatsapp-primary: #25D366;
 }
 
 * {
@@ -798,11 +809,99 @@ ul {
     background-size: 1em;
 }
 
+/* Circular Social Media Buttons */
+.social-btn-circular {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 0 5px;
+}
+
+.social-btn-circular:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Instagram */
+.btn-instagram {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+/* Facebook */
+.btn-facebook {
+    background: var(--facebook-primary);
+}
+
+/* LinkedIn */
+.btn-linkedin {
+    background: var(--linkedin-primary);
+}
+
+/* WhatsApp */
+.btn-whatsapp {
+    background: var(--whatsapp-primary);
+}
+
+/* Header Social Media Fix */
+.header .social-login-header {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.header .social-btn-circular {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+}
+
+/* Footer Social Media Fix */
+.footer .social-links {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.footer .social-btn-circular {
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header .social-login-header {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .footer .social-links {
+        flex-wrap: wrap;
+    }
+}
+
 /* Footer */
 .footer {
     background: var(--bg-dark);
     color: var(--white);
     padding: 60px 0 0;
+    transition: var(--transition);
+}
+
+.footer .social-links a {
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.footer .social-links a:hover {
+    background: var(--secondary-color) !important;
+    transform: translateY(-3px);
 }
 
 .footer-grid {
@@ -868,7 +967,9 @@ ul {
     background: var(--secondary-color);
     transform: translateY(-3px);
 }
-
+.contact-info p {
+    text-align: left;
+}
 .footer-col ul li {
     margin-bottom: 10px;
 }
@@ -1060,5 +1161,65 @@ ul {
     
     .footer-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Certificates Section */
+.certificate-section {
+    padding: 80px 0;
+    background: var(--bg-light);
+}
+
+.certificates-grid {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.certificate-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    max-width: 250px;
+    aspect-ratio: 1/1;
+}
+
+.certificate-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.certificate-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 15px;
+}
+
+/* Responsive for certificates */
+@media (max-width: 768px) {
+    .certificates-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .certificate-card {
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .certificate-card {
+        max-width: 180px;
+        padding: 15px;
     }
 }

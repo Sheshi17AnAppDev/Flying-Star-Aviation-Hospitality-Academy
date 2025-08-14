@@ -81,7 +81,7 @@ app.post('/send-form2', async (req, res) => {
     res.json({ 
       success: true, 
       message: 'Form 2 data sent successfully!', 
-      redirect: '/thank-you-page.html' 
+      redirect: '/thank-you-fixed.html' 
     });
   } catch (error) {
     console.error('Error sending email:', error);
@@ -119,7 +119,7 @@ app.post('/send-cta-form', async (req, res) => {
     res.json({ 
       success: true, 
       message: 'CTA form data sent successfully!', 
-      redirect: '/thank-you-page.html' 
+      redirect: '/thank-you-fixed.html' 
     });
   } catch (error) {
     console.error('Error sending email:', error);

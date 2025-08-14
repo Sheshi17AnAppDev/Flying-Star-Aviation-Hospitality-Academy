@@ -16,8 +16,51 @@ document.addEventListener('DOMContentLoaded', function () {
             header.classList.add('scrolled');
         } else {
             header.classList.remove('scrolled');
-        }
-    });
+    }
+
+    // Social Login Functions
+    window.handleGoogleLogin = function() {
+        // Google OAuth2 implementation
+        console.log('Google login initiated');
+        
+        // Example implementation - replace with actual Google OAuth
+        const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
+        const params = new URLSearchParams({
+            client_id: 'YOUR_GOOGLE_CLIENT_ID',
+            redirect_uri: window.location.origin + '/auth/google/callback',
+            response_type: 'code',
+            scope: 'email profile',
+            state: 'google_login'
+        });
+        
+        // For demo purposes, show alert
+        alert('Google login would redirect to: ' + googleAuthUrl + '?' + params.toString());
+        
+        // Uncomment the line below for actual implementation
+        // window.location.href = googleAuthUrl + '?' + params.toString();
+    };
+
+    window.handleFacebookLogin = function() {
+        // Facebook OAuth2 implementation
+        console.log('Facebook login initiated');
+        
+        // Example implementation - replace with actual Facebook OAuth
+        const facebookAuthUrl = 'https://www.facebook.com/v12.0/dialog/oauth';
+        const params = new URLSearchParams({
+            client_id: 'YOUR_FACEBOOK_APP_ID',
+            redirect_uri: window.location.origin + '/auth/facebook/callback',
+            response_type: 'code',
+            scope: 'email,public_profile',
+            state: 'facebook_login'
+        });
+        
+        // For demo purposes, show alert
+        alert('Facebook login would redirect to: ' + facebookAuthUrl + '?' + params.toString());
+        
+        // Uncomment the line below for actual implementation
+        // window.location.href = facebookAuthUrl + '?' + params.toString();
+    };
+});
 
     // Back to Top Button
     const backToTopBtn = document.createElement('div');
@@ -191,15 +234,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const result = await res.json();
                 if (res.ok && result.message) {
-                    // Success - update UI
-                    formMessage.style.color = 'green';
-                    formMessage.innerHTML = '<i class="fas fa-check-circle"></i> ' + result.message;
-                    ctaForm.reset();
-                    
-                    // Auto-hide success message after 5 seconds
-                    setTimeout(() => {
-                        formMessage.style.display = 'none';
-                    }, 5000);
+                    // Success - redirect to thank you page
+                    if (result.redirect) {
+                        window.location.href = result.redirect;
+                    } else {
+                        // Fallback for older responses
+                        formMessage.style.color = 'green';
+                        formMessage.innerHTML = '<i class="fas fa-check-circle"></i> ' + result.message;
+                        ctaForm.reset();
+                        
+                        // Auto-hide success message after 5 seconds
+                        setTimeout(() => {
+                            formMessage.style.display = 'none';
+                        }, 5000);
+                    }
                 } else {
                     throw new Error(result.message || 'Failed to send application');
                 }
@@ -257,15 +305,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const result = await res.json();
                 if (res.ok && result.message) {
-                    // Success - update UI
-                    formMessage.style.color = 'green';
-                    formMessage.innerHTML = '<i class="fas fa-check-circle"></i> ' + result.message;
-                    enquiryForm.reset();
-                    
-                    // Auto-hide success message after 5 seconds
-                    setTimeout(() => {
-                        formMessage.style.display = 'none';
-                    }, 5000);
+                    // Success - redirect to thank you page
+                    if (result.redirect) {
+                        window.location.href = result.redirect;
+                    } else {
+                        // Fallback for older responses
+                        formMessage.style.color = 'green';
+                        formMessage.innerHTML = '<i class="fas fa-check-circle"></i> ' + result.message;
+                        enquiryForm.reset();
+                        
+                        // Auto-hide success message after 5 seconds
+                        setTimeout(() => {
+                            formMessage.style.display = 'none';
+                        }, 5000);
+                    }
                 } else {
                     throw new Error(result.message || 'Failed to send enquiry');
                 }
