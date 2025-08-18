@@ -3,64 +3,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const nav = document.querySelector('.nav');
 
-    mobileMenuBtn.addEventListener('click', function () {
-        nav.classList.toggle('active');
-        this.querySelector('i').classList.toggle('fa-times');
-        this.querySelector('i').classList.toggle('fa-bars');
-    });
+    if (mobileMenuBtn && nav) {
+        mobileMenuBtn.addEventListener('click', function () {
+            nav.classList.toggle('active');
+            this.querySelector('i').classList.toggle('fa-times');
+            this.querySelector('i').classList.toggle('fa-bars');
+        });
+    }
 
     // Header Scroll Effect
     const header = document.querySelector('.header');
-    window.addEventListener('scroll', function () {
-        if (window.scrollY > 100) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
+    if (header) {
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
     }
-
-    // Social Login Functions
-    window.handleGoogleLogin = function() {
-        // Google OAuth2 implementation
-        console.log('Google login initiated');
-        
-        // Example implementation - replace with actual Google OAuth
-        const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
-        const params = new URLSearchParams({
-            client_id: 'YOUR_GOOGLE_CLIENT_ID',
-            redirect_uri: window.location.origin + '/auth/google/callback',
-            response_type: 'code',
-            scope: 'email profile',
-            state: 'google_login'
-        });
-        
-        // For demo purposes, show alert
-        alert('Google login would redirect to: ' + googleAuthUrl + '?' + params.toString());
-        
-        // Uncomment the line below for actual implementation
-        // window.location.href = googleAuthUrl + '?' + params.toString();
-    };
-
-    window.handleFacebookLogin = function() {
-        // Facebook OAuth2 implementation
-        console.log('Facebook login initiated');
-        
-        // Example implementation - replace with actual Facebook OAuth
-        const facebookAuthUrl = 'https://www.facebook.com/v12.0/dialog/oauth';
-        const params = new URLSearchParams({
-            client_id: 'YOUR_FACEBOOK_APP_ID',
-            redirect_uri: window.location.origin + '/auth/facebook/callback',
-            response_type: 'code',
-            scope: 'email,public_profile',
-            state: 'facebook_login'
-        });
-        
-        // For demo purposes, show alert
-        alert('Facebook login would redirect to: ' + facebookAuthUrl + '?' + params.toString());
-        
-        // Uncomment the line below for actual implementation
-        // window.location.href = facebookAuthUrl + '?' + params.toString();
-    };
-});
 
     // Back to Top Button
     const backToTopBtn = document.createElement('div');
@@ -93,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
-                const headerHeight = document.querySelector('.header').offsetHeight;
+                const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
                 const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
 
                 window.scrollTo({
@@ -102,10 +63,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 // Close mobile menu if open
-                if (nav.classList.contains('active')) {
+                if (nav && nav.classList.contains('active')) {
                     nav.classList.remove('active');
-                    mobileMenuBtn.querySelector('i').classList.remove('fa-times');
-                    mobileMenuBtn.querySelector('i').classList.add('fa-bars');
+                    if (mobileMenuBtn) {
+                        mobileMenuBtn.querySelector('i').classList.remove('fa-times');
+                        mobileMenuBtn.querySelector('i').classList.add('fa-bars');
+                    }
                 }
             }
         });
@@ -273,6 +236,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (enquiryForm) {
         enquiryForm.addEventListener('submit', async function (e) {
             e.preventDefault();
+            e.stopPropagation(); // Prevent any default form submission
 
             const submitBtn = document.getElementById('submit-btn');
             const btnText = submitBtn.querySelector('.btn-text');
@@ -283,6 +247,31 @@ document.addEventListener('DOMContentLoaded', function () {
             btnText.style.display = 'none';
             btnLoading.style.display = 'inline-block';
             formMessage.style.display = 'none';
+            formMessage.className = 'form-message';
+
+            // Validate required fields
+            const requiredFields = ['first-name', 'last-name', 'phone', 'email', 'city', 'branch', 'dob', 'qualification'];
+            let isValid = true;
+            
+            for (const fieldId of requiredFields) {
+                const field = document.querySelector(`#${fieldId}`);
+                if (!field || !field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = '#ff6b6b';
+                } else {
+                    field.style.borderColor = '';
+                }
+            }
+
+            if (!isValid) {
+                formMessage.style.color = 'red';
+                formMessage.innerHTML = '<i class="fas fa-times-circle"></i> Please fill all required fields';
+                formMessage.style.display = 'block';
+                
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+                return;
+            }
 
             // Prepare payload for backend
             const payload = {
@@ -304,21 +293,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 const result = await res.json();
-                if (res.ok && result.message) {
+                if (res.ok && result.success) {
                     // Success - redirect to thank you page
-                    if (result.redirect) {
-                        window.location.href = result.redirect;
-                    } else {
-                        // Fallback for older responses
-                        formMessage.style.color = 'green';
-                        formMessage.innerHTML = '<i class="fas fa-check-circle"></i> ' + result.message;
-                        enquiryForm.reset();
-                        
-                        // Auto-hide success message after 5 seconds
-                        setTimeout(() => {
-                            formMessage.style.display = 'none';
-                        }, 5000);
-                    }
+                    window.location.href = result.redirect || 'thank-you-page.html';
                 } else {
                     throw new Error(result.message || 'Failed to send enquiry');
                 }
@@ -326,6 +303,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Error - update UI
                 formMessage.style.color = 'red';
                 formMessage.innerHTML = `<i class="fas fa-times-circle"></i> ${err.message}`;
+                formMessage.style.display = 'block';
                 
                 // Auto-hide error message after 5 seconds
                 setTimeout(() => {
@@ -334,7 +312,6 @@ document.addEventListener('DOMContentLoaded', function () {
             } finally {
                 btnText.style.display = 'inline';
                 btnLoading.style.display = 'none';
-                formMessage.style.display = 'block';
             }
         });
     }
